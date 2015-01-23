@@ -13,10 +13,10 @@ angular.module('ICEOapp')
 
             Main.signin(formData, function(res) {
                 console.log(res)
-                if (res.type == false) {
+                if (res.token == false) {
                     alert(res)
                 } else {
-                    $localStorage.token = res.data.token;
+                    $localStorage.token = res.token;
                     window.location = "/";
                 }
             }, function() {
@@ -31,14 +31,13 @@ angular.module('ICEOapp')
             }
 
             Main.save(formData, function(res) {
-                /*if (res.token == false) {
+                if (res.token == false) {
                     alert(res)
                 } else {
                     $localStorage.token = res.data.token;
                     alert(res.data.token)
                     window.location = "/"
-                }*/
-                console.log(res)
+                }
             }, function() {
                 $rootScope.error = 'Failed to signup';
             })
