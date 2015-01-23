@@ -31,13 +31,14 @@ angular.module('ICEOapp')
             }
 
             Main.save(formData, function(res) {
-                if (res.token == false) {
+                /*if (res.token == false) {
                     alert(res)
                 } else {
                     $localStorage.token = res.data.token;
                     alert(res.data.token)
                     window.location = "/"
-                }
+                }*/
+                console.log(res)
             }, function() {
                 $rootScope.error = 'Failed to signup';
             })
