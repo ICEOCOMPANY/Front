@@ -1,8 +1,10 @@
 'use strict';
 
 angular.module('ICEOapp')
-    .factory('Main', ['$http', '$localStorage', function($http, $localStorage){
+    .factory('Main', ['$http', '$localStorage', function ($http, $localStorage) {
+        //API domain url
         var baseUrl = "http://back.core.iceo.zone";
+
         function changeUser(user) {
             angular.extend(currentUser, user);
         }
@@ -36,21 +38,24 @@ angular.module('ICEOapp')
 
         var currentUser = getUserFromToken();
 
+        //set Content-Type to prevent browser from send preflight OPTIONS to domain
+        $http.defaults.headers.post["Content-Type"] = "text/plain";
+
         return {
-            save: function(data, success, error) {
+            save: function (data, success, error) {
                 $http.post(baseUrl + '/index.php', data).success(success).error(error)
             },
-            signin: function(data, success, error) {
+            signin: function (data, success, error) {
                 $http.post(baseUrl + '/auth', data).success(success).error(error)
             },
-            me: function(success, error) {
+            me: function (success, error) {
                 $http.get(baseUrl + '/index.php').success(success).error(error)
             },
-            logout: function(success) {
+            logout: function (success) {
                 changeUser({});
                 delete $localStorage.token;
                 success();
             }
         };
     }
-]);
+    ]);

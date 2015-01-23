@@ -10,7 +10,6 @@ angular.module('ICEOapp', [
         //$httpProvider.defaults.useXDomain = true;
         //delete $httpProvider.defaults.headers.common['X-Requested-With'];
 
-
         $routeProvider.
             when('/', {
                 templateUrl: 'partials/home.html',
@@ -37,7 +36,7 @@ angular.module('ICEOapp', [
                 'request': function (config) {
                     config.headers = config.headers || {};
                     if ($localStorage.token) {
-                        config.headers.Authorization = 'Bearer ' + $localStorage.token;
+                        config.headers.Authorization = $localStorage.token;
                     }
                     return config;
                 },
