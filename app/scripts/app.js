@@ -7,9 +7,6 @@ angular.module('ICEOapp', [
 ])
     .config(['$routeProvider', '$httpProvider', function ($routeProvider, $httpProvider) {
 
-        //$httpProvider.defaults.useXDomain = true;
-        //delete $httpProvider.defaults.headers.common['X-Requested-With'];
-
         $routeProvider.
             when('/', {
                 templateUrl: 'partials/home.html',

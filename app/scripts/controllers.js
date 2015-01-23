@@ -31,11 +31,11 @@ angular.module('ICEOapp')
             }
 
             Main.save(formData, function(res) {
-                if (res.type == false) {
-                    alert(res.data)
+                if (res.token == false) {
+                    alert(res)
                 } else {
                     $localStorage.token = res.data.token;
-                    debugger;
+                    alert(res.data.token)
                     window.location = "/"
                 }
             }, function() {
