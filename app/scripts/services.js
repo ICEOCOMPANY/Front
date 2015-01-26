@@ -1,8 +1,9 @@
 'use strict';
 
 angular.module('ICEOapp')
-    .factory('Main', ['$http', '$localStorage', function ($http, $localStorage) {
-        //API domain url
+    .factory('MainFactory', ['$http', '$localStorage', function ($http, $localStorage) {
+
+        //API domain url - here you should define a domain of your REST API!
         var baseUrl = "http://back.core.iceo.zone";
 
         function changeUser(user) {
@@ -59,6 +60,9 @@ angular.module('ICEOapp')
                 }).success(success).error(error);
                 /*changeUser({});
                 delete $localStorage.token;*/
+            },
+            remind: function(success, error){
+                $http.put(baseUrl+"/remind").success(success).error(error)
             }
         };
     }

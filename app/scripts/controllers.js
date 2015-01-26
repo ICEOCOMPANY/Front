@@ -2,16 +2,19 @@
 
 /* Controllers */
 
+/**
+ * BaseController use for sing up/sin in/logout/remind password
+ */
 angular.module('ICEOapp')
-    .controller('HomeCtrl', ['$rootScope', '$scope', '$location', '$localStorage', 'Main', function($rootScope, $scope, $location, $localStorage, Main) {
+    .controller('BaseCtrl', ['$rootScope', '$scope', '$location', '$localStorage', 'MainFactory', function ($rootScope, $scope, $location, $localStorage, MainFactory) {
 
-        $scope.signin = function() {
+        $scope.signin = function () {
             var formData = {
                 email: $scope.email,
                 password: $scope.password
             }
 
-            Main.signin(formData, function(res) {
+            MainFactory.signin(formData, function (res) {
                 console.log(res)
                 if (res.token == false) {
                     console.log(res)
@@ -19,18 +22,18 @@ angular.module('ICEOapp')
                     $localStorage.token = res.token;
                     alert($localStorage.token);
                 }
-            }, function() {
+            }, function () {
                 $rootScope.error = 'Failed to signin';
             })
         };
 
-        $scope.signup = function() {
+        $scope.signup = function () {
             var formData = {
                 email: $scope.email,
                 password: $scope.password
             }
 
-            Main.save(formData, function(res) {
+            MainFactory.save(formData, function (res) {
                 if (res.token == false) {
                     alert(res)
                 } else {
@@ -38,34 +41,43 @@ angular.module('ICEOapp')
                     alert(res.data.token)
                     window.location = "/"
                 }
-            }, function() {
+            }, function () {
                 $rootScope.error = 'Failed to signup';
             })
         };
 
-        $scope.me = function() {
-            Main.me(function(res) {
+        $scope.me = function () {
+            MainFactory.me(function (res) {
                 $scope.myDetails = res;
-            }, function() {
+            }, function () {
                 $rootScope.error = 'Failed to fetch details';
             })
         };
 
-        $scope.logout = function() {
-            Main.logout(function() {
+        $scope.logout = function () {
+            MainFactory.logout(function () {
                 window.location = "/"
-            }, function() {
+            }, function () {
                 alert("Failed to logout!");
             });
         };
+
+        $scope.remind = function () {
+            MainFactory.remind(function (res) {
+                alert("Nowe hasło wyslano na e-mail");
+            }, function () {
+                alert("Wystąpił błąd przy przypomnieniu hasła!");
+            });
+        };
+
         $scope.token = $localStorage.token;
     }])
 
-.controller('MeCtrl', ['$rootScope', '$scope', '$location', 'Main', function($rootScope, $scope, $location, Main) {
+    .controller('MeCtrl', ['$rootScope', '$scope', '$location', 'MainFactory', function ($rootScope, $scope, $location, MainFactory) {
 
-        Main.me(function(res) {
+        MainFactory.me(function (res) {
             $scope.myDetails = res;
-        }, function() {
+        }, function () {
             $rootScope.error = 'Failed to fetch details';
         })
-}]);
+    }]);

@@ -10,19 +10,23 @@ angular.module('ICEOapp', [
         $routeProvider.
             when('/', {
                 templateUrl: 'partials/home.html',
-                controller: 'HomeCtrl'
+                controller: 'BaseCtrl'
             }).
             when('/signin', {
                 templateUrl: 'partials/signin.html',
-                controller: 'HomeCtrl'
+                controller: 'BaseCtrl'
             }).
             when('/signup', {
                 templateUrl: 'partials/signup.html',
-                controller: 'HomeCtrl'
+                controller: 'BaseCtrl'
             }).
             when('/me', {
                 templateUrl: 'partials/me.html',
-                controller: 'HomeCtrl'
+                controller: 'BaseCtrl'
+            }).
+            when('/remind', {
+                templateUrl: 'partials/remind.html',
+                controller: 'BaseCtrl'
             }).
             otherwise({
                 redirectTo: '/'
