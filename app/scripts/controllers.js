@@ -6,7 +6,18 @@
  * BaseController use for sing up/sin in/logout/remind password
  */
 angular.module('ICEOapp')
-    .controller('BaseCtrl', ['$rootScope', '$scope', '$location', '$localStorage', 'MainFactory', function ($rootScope, $scope, $location, $localStorage, MainFactory) {
+    .controller('BaseCtrl', ['$rootScope', '$scope', '$location', '$localStorage', '$route', 'MainFactory', function ($rootScope, $scope, $location, $localStorage, $route, MainFactory) {
+
+        //First check if token exists and is not extinct
+        if ($localStorage.token !== undefined && $localStorage.token !== null ) {
+            MainFactory.checkToken(function () {
+                console.log("Fuck yeah");
+            }, function () {
+                delete $localStorage.token;
+                $location.path("/");
+                $scope.token = null;
+            });
+        }
 
         //Function runs when user sing in on website
         $scope.signin = function () {
@@ -16,12 +27,13 @@ angular.module('ICEOapp')
             }
             //Use MainFactory from services.js
             MainFactory.signin(formData, function (res) {
-                console.log(res)
                 if (res.token == false) {
                     console.log(res)
                 } else {
                     $localStorage.token = res.token;
-                    alert($localStorage.token);
+                    $location.path("/");
+                    $route.reload();
+                    $scope.token = $localStorage.token;
                 }
             }, function () {
                 $rootScope.error = 'Failed to signin';
@@ -39,8 +51,7 @@ angular.module('ICEOapp')
                     alert(res)
                 } else {
                     $localStorage.token = res.data.token;
-                    alert(res.data.token)
-                    window.location = "/"
+                    $location.path("/");
                 }
             }, function () {
                 $rootScope.error = 'Failed to signup';
@@ -58,9 +69,11 @@ angular.module('ICEOapp')
         $scope.logout = function () {
             MainFactory.logout(function () {
                 delete $localStorage.token;
+                $location.path("/");
             }, function () {
                 alert("Failed to logout!");
             });
+            $scope.token = null;
         };
 
         $scope.remind = function () {
@@ -75,6 +88,7 @@ angular.module('ICEOapp')
         };
 
         $scope.token = $localStorage.token;
+
     }])
 
     .controller('MeCtrl', ['$rootScope', '$scope', '$location', 'MainFactory', function ($rootScope, $scope, $location, MainFactory) {

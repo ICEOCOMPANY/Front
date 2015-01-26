@@ -41,9 +41,12 @@ angular.module('ICEOapp')
 
         //set Content-Type to prevent browser from send preflight OPTIONS to domain
         $http.defaults.headers.post["Content-Type"] = 'application/x-www-form-urlencoded';
-        $http.defaults.headers.put["Content-Type"] = "text/plain"
+        $http.defaults.headers.put["Content-Type"] = 'application/x-www-form-urlencoded';
 
         return {
+            checkToken: function(success, error){
+                $http.get(baseUrl + '/auth').success(success).error(error)
+            },
             signup: function (data, success, error) {
                 $http.post(baseUrl + '/register', data).success(success).error(error)
             },
@@ -55,10 +58,10 @@ angular.module('ICEOapp')
             },
             logout: function (success, error) {
                 $http.delete(baseUrl + '/auth').success(success).error(error)
+                changeUser({});
             },
             remind: function(success, error){
                 $http.put(baseUrl+"/remind").success(success).error(error)
-                changeUser({});
             }
         };
     }
