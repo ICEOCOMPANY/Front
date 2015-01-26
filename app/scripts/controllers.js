@@ -57,7 +57,7 @@ angular.module('ICEOapp')
 
         $scope.logout = function () {
             MainFactory.logout(function () {
-                window.location = "/"
+                delete $localStorage.token;
             }, function () {
                 alert("Failed to logout!");
             });
