@@ -54,12 +54,9 @@ angular.module('ICEOapp')
                 $http.get(baseUrl + '/user').success(success).error(error)
             },
             logout: function (success, error) {
-                $.ajax({
-                    url: baseUrl+"/auth",
-                    method: "DELETE"
-                }).success(success).error(error);
-                /*changeUser({});
-                delete $localStorage.token;*/
+                $http.delete(baseUrl + '/auth').success(success).error(error)
+                changeUser({});
+                delete $localStorage.token;
             },
             remind: function(success, error){
                 $http.put(baseUrl+"/remind").success(success).error(error)
