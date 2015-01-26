@@ -40,7 +40,7 @@ angular.module('ICEOapp')
         var currentUser = getUserFromToken();
 
         //set Content-Type to prevent browser from send preflight OPTIONS to domain
-        $http.defaults.headers.post["Content-Type"] = "text/plain";
+        $http.defaults.headers.post["Content-Type"] = 'application/x-www-form-urlencode';
         $http.defaults.headers.put["Content-Type"] = "text/plain"
 
         return {
