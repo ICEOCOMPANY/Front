@@ -8,12 +8,13 @@
 angular.module('ICEOapp')
     .controller('BaseCtrl', ['$rootScope', '$scope', '$location', '$localStorage', 'MainFactory', function ($rootScope, $scope, $location, $localStorage, MainFactory) {
 
+        //Function runs when user sing in on website
         $scope.signin = function () {
             var formData = {
                 email: $scope.email,
                 password: $scope.password
             }
-
+            //Use MainFactory from services.js
             MainFactory.signin(formData, function (res) {
                 console.log(res)
                 if (res.token == false) {
@@ -33,7 +34,7 @@ angular.module('ICEOapp')
                 password: $scope.password
             }
 
-            MainFactory.save(formData, function (res) {
+            MainFactory.signup(formData, function (res) {
                 if (res.token == false) {
                     alert(res)
                 } else {
@@ -63,7 +64,10 @@ angular.module('ICEOapp')
         };
 
         $scope.remind = function () {
-            MainFactory.remind(function (res) {
+            var formData = {
+                email: $scope.email
+            }
+            MainFactory.remind(formData, function () {
                 alert("Nowe hasło wyslano na e-mail");
             }, function () {
                 alert("Wystąpił błąd przy przypomnieniu hasła!");
