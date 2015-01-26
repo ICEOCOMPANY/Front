@@ -14,10 +14,10 @@ angular.module('ICEOapp')
             Main.signin(formData, function(res) {
                 console.log(res)
                 if (res.token == false) {
-                    alert(res)
+                    console.log(res)
                 } else {
                     $localStorage.token = res.token;
-                    window.location = "/";
+                    alert($localStorage.token);
                 }
             }, function() {
                 $rootScope.error = 'Failed to signin';

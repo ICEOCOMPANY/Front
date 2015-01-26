@@ -39,11 +39,12 @@ angular.module('ICEOapp')
         var currentUser = getUserFromToken();
 
         //set Content-Type to prevent browser from send preflight OPTIONS to domain
-        $http.defaults.headers.post["Content-Type"] = "text/plain";
+        $http.defaults.headers.post["Content-Type"] = "multipart/form-data";
+        $http.defaults.headers.put["Content-Type"] = "multipart/form-data";
 
         return {
             save: function (data, success, error) {
-                $http.post(baseUrl + '/index.php', data).success(success).error(error)
+                $http.post(baseUrl + '/register', data).success(success).error(error)
             },
             signin: function (data, success, error) {
                 $http.post(baseUrl + '/auth', data).success(success).error(error)
@@ -51,10 +52,13 @@ angular.module('ICEOapp')
             me: function (success, error) {
                 $http.get(baseUrl + '/index.php').success(success).error(error)
             },
-            logout: function (success) {
-                changeUser({});
-                delete $localStorage.token;
-                success();
+            logout: function (success, error) {
+                $.ajax({
+                    url: baseUrl+"/auth",
+                    method: "DELETE"
+                }).success(success).error(error);
+                /*changeUser({});
+                delete $localStorage.token;*/
             }
         };
     }
