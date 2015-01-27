@@ -24,6 +24,21 @@ angular.module('ICEOapp')
             });
         }
 
+        $scope.$on('$routeChangeSuccess', function (event, next, current) {
+            if ($localStorage.token !== undefined && $localStorage.token !== null) {
+
+                var guestPaths = ["/signin","/signup"];
+
+                angular.forEach(guestPaths, function(value, key){
+                    if (value == next.originalPath){
+                        $location.path("/");
+                    }
+                });
+
+
+            }
+        });
+
         //Function runs when user sign in on website
         $scope.signin = function () {
             var formData = {
@@ -62,6 +77,7 @@ angular.module('ICEOapp')
             }, function () {
                 $rootScope.error = 'Failed to signup';
             })
+
         };
 
 
