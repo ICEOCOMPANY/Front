@@ -32,6 +32,10 @@ angular.module('ICEOapp', [
                 templateUrl: 'partials/reset.html',
                 controller: 'BaseCtrl'
             }).
+            when('/file', {
+                templateUrl: 'partials/file.html',
+                controller: 'FileController'
+            }).
             otherwise({
                 redirectTo: '/'
             });

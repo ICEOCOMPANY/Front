@@ -65,6 +65,9 @@ angular.module('ICEOapp')
             },
             reset: function(data, key, success, error){
                 $http.put(baseUrl+"/users/reset-password/"+key, data).success(success).error(error)
+            },
+            getFile: function(success, error){
+                $http.get(baseUrl+"/files/1").success(success).error(error)
             }
         };
     }

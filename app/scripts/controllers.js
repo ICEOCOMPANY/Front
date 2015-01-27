@@ -24,17 +24,27 @@ angular.module('ICEOapp')
             });
         }
 
+        //check token and redirect if user want to access a area he cant't
         $scope.$on('$routeChangeSuccess', function (event, next, current) {
             if ($localStorage.token !== undefined && $localStorage.token !== null) {
 
-                var guestPaths = ["/signin","/signup"];
+                var guestPaths = ["/signin", "/signup"];
 
-                angular.forEach(guestPaths, function(value, key){
-                    if (value == next.originalPath){
+                angular.forEach(guestPaths, function (value, key) {
+                    if (value == next.originalPath) {
                         $location.path("/");
                     }
                 });
 
+            } else {
+
+                var loggedPaths = ["/profile", "/loogut"];
+
+                angular.forEach(loggedPaths, function (value, key) {
+                    if (value == next.originalPath) {
+                        $location.path("/");
+                    }
+                });
 
             }
         });
@@ -116,5 +126,16 @@ angular.module('ICEOapp')
 
         $scope.token = $localStorage.token;
 
-    }])
-;
+    }]);
+
+angular.module('ICEOapp')
+    .controller('FileController', ['$rootScope', '$scope', '$location', '$routeParams', '$localStorage', '$route', 'MainFactory', function ($rootScope, $scope, $location, $routeParams, $localStorage, $route, MainFactory) {
+        MainFactory.getFile(function (res) {
+            console.log(res);
+            $scope.link = res;
+            alert("Pobrano plik");
+        }, function () {
+            alert("Wystąpił błąd przy pobieraniu pliku!");
+        });
+    }
+    ]);
