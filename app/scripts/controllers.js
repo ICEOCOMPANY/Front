@@ -87,7 +87,7 @@ angular.module('ICEOapp')
             var formData = {
                 email: $scope.email
             }
-            MainFactory.remind(formData, function () {
+            MainFactory.reset(formData, function () {
                 alert("Nowe hasło wyslano na e-mail");
             }, function () {
                 alert("Wystąpił błąd przy przypomnieniu hasła!");

@@ -1,5 +1,8 @@
 'use strict';
 
+/**
+ * Service to handle basic functions
+ */
 angular.module('ICEOapp')
     .factory('MainFactory', ['$http', '$localStorage', function ($http, $localStorage) {
 
@@ -40,8 +43,8 @@ angular.module('ICEOapp')
         var currentUser = getUserFromToken();
 
         //set Content-Type to prevent browser from send preflight OPTIONS to domain
-        $http.defaults.headers.post["Content-Type"] = 'application/x-www-form-urlencoded';
-        $http.defaults.headers.put["Content-Type"] = 'application/x-www-form-urlencoded';
+        $http.defaults.headers.post["Content-Type"] = 'text/plain';
+        $http.defaults.headers.put["Content-Type"] = 'text/plain';
 
         return {
             checkToken: function(success, error){
