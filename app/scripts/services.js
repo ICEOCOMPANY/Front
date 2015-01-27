@@ -48,20 +48,20 @@ angular.module('ICEOapp')
                 $http.get(baseUrl + '/auth').success(success).error(error)
             },
             signup: function (data, success, error) {
-                $http.post(baseUrl + '/register', data).success(success).error(error)
+                $http.post(baseUrl + '/users', data).success(success).error(error)
             },
             signin: function (data, success, error) {
                 $http.post(baseUrl + '/auth', data).success(success).error(error)
             },
-            me: function (success, error) {
+            profile: function (success, error) {
                 $http.get(baseUrl + '/user').success(success).error(error)
             },
             logout: function (success, error) {
                 $http.delete(baseUrl + '/auth').success(success).error(error)
                 changeUser({});
             },
-            remind: function(success, error){
-                $http.put(baseUrl+"/remind").success(success).error(error)
+            reset: function(data, success, error){
+                $http.post(baseUrl+"/users/"+data.email+"/reset-password").success(success).error(error)
             }
         };
     }

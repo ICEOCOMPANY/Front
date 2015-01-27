@@ -8,15 +8,21 @@
 angular.module('ICEOapp')
     .controller('BaseCtrl', ['$rootScope', '$scope', '$location', '$localStorage', '$route', 'MainFactory', function ($rootScope, $scope, $location, $localStorage, $route, MainFactory) {
 
+        $scope.checkToken = false;
+        console.log("Zaczynam plik");
         //First check if token exists and is not extinct
-        if ($localStorage.token !== undefined && $localStorage.token !== null ) {
-            MainFactory.checkToken(function () {
-                console.log("Fuck yeah");
-            }, function () {
-                delete $localStorage.token;
-                $location.path("/");
-                $scope.token = null;
-            });
+        if ($scope.checkToken === false) {
+            if ($localStorage.token !== undefined && $localStorage.token !== null) {
+                console.log("Sprawdzam token");
+                MainFactory.checkToken(function () {
+                    console.log("Fuck yeah");
+                }, function () {
+                    delete $localStorage.token;
+                    $location.path("/");
+                    $scope.token = null;
+                });
+            }
+            $scope.checkToken = true;
         }
 
         //Function runs when user sing in on website
@@ -43,7 +49,8 @@ angular.module('ICEOapp')
         $scope.signup = function () {
             var formData = {
                 email: $scope.email,
-                password: $scope.password
+                password: $scope.password,
+                password_repeat: $scope.password_repeat
             }
 
             MainFactory.signup(formData, function (res) {
@@ -58,7 +65,7 @@ angular.module('ICEOapp')
             })
         };
 
-        $scope.me = function () {
+        $scope.profile = function () {
             MainFactory.me(function (res) {
                 $scope.myDetails = res;
             }, function () {
@@ -76,7 +83,7 @@ angular.module('ICEOapp')
             $scope.token = null;
         };
 
-        $scope.remind = function () {
+        $scope.reset = function () {
             var formData = {
                 email: $scope.email
             }
@@ -91,11 +98,13 @@ angular.module('ICEOapp')
 
     }])
 
-    .controller('MeCtrl', ['$rootScope', '$scope', '$location', 'MainFactory', function ($rootScope, $scope, $location, MainFactory) {
+    .
+    controller('MeCtrl', ['$rootScope', '$scope', '$location', 'MainFactory', function ($rootScope, $scope, $location, MainFactory) {
 
-        MainFactory.me(function (res) {
+        MainFactory.profile(function (res) {
             $scope.myDetails = res;
         }, function () {
             $rootScope.error = 'Failed to fetch details';
         })
+
     }]);
