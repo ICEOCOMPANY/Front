@@ -63,8 +63,11 @@ angular.module('ICEOapp')
                 $http.delete(baseUrl + '/auth').success(success).error(error)
                 changeUser({});
             },
-            reset: function(data, success, error){
+            remind: function(data, success, error){
                 $http.post(baseUrl+"/users/"+data.email+"/reset-password").success(success).error(error)
+            },
+            reset: function(data, key, success, error){
+                $http.put(baseUrl+"/users/reset-password/"+key, data).success(success).error(error)
             }
         };
     }

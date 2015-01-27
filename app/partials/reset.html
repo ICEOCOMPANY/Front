@@ -1,0 +1,33 @@
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <strong>Przypomnienie hasła</strong>
+            </div>
+            <div class="panel-body">
+                <form class="form-horizontal" role="form" ng-submit="reset()">
+                    <div class="form-group">
+                        <label for="new-password" class="col-sm-2 control-label">Nowe hasło</label>
+
+                        <div class="col-sm-10">
+                            <input type="password" class="form-control" id="new-password" placeholder="Email" ng-model="new_password">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="repeat-new-password" class="col-sm-2 control-label">Powtórz nowe hasło</label>
+
+                        <div class="col-sm-10">
+                            <input type="password" class="form-control" id="repeat-new-password" placeholder="Email" ng-model="repeat_new_password">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <button type="submit" class="btn btn-default">Generuj</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -6,7 +6,11 @@
  * BaseController use for sing up/sin in/logout/remind password
  */
 angular.module('ICEOapp')
-    .controller('BaseCtrl', ['$rootScope', '$scope', '$location', '$localStorage', '$route', 'MainFactory', function ($rootScope, $scope, $location, $localStorage, $route, MainFactory) {
+    .controller('BaseCtrl', ['$rootScope', '$scope', '$location', '$routeParams', '$localStorage', '$route', 'MainFactory', function ($rootScope, $scope, $routeParams, $location, $localStorage, $route, MainFactory) {
+        
+        $scope.$on('$routeChangeSuccess', function() {
+            console.log($route.current.params)
+        });
 
         $scope.checkToken = false;
         console.log("Zaczynam plik");
@@ -83,14 +87,26 @@ angular.module('ICEOapp')
             $scope.token = null;
         };
 
-        $scope.reset = function () {
+        $scope.remind = function () {
             var formData = {
                 email: $scope.email
             }
-            MainFactory.reset(formData, function () {
+            MainFactory.remind(formData, function () {
                 alert("Nowe hasło wyslano na e-mail");
             }, function () {
                 alert("Wystąpił błąd przy przypomnieniu hasła!");
+            });
+        };
+
+        $scope.reset = function () {
+            var formData = {
+                new_password: $scope.new_password,
+                reset_new_password: $scope.reset_new_password
+            }
+            MainFactory.reset(formData, $routeParams.param, function () {
+                alert("Nowe hasło wyslano wygenerowane");
+            }, function () {
+                alert("Wystąpił błąd przy generowaniu hasła!");
             });
         };
 

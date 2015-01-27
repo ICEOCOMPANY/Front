@@ -28,6 +28,10 @@ angular.module('ICEOapp', [
                 templateUrl: 'partials/remind.html',
                 controller: 'BaseCtrl'
             }).
+            when('/reset/:param', {
+                templateUrl: 'partials/reset.html',
+                controller: 'BaseCtrl'
+            }).
             otherwise({
                 redirectTo: '/'
             });
