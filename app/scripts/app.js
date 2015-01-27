@@ -21,7 +21,7 @@ angular.module('ICEOapp', [
                 controller: 'BaseCtrl'
             }).
             when('/me', {
-                templateUrl: 'partials/me.html',
+                templateUrl: 'partials/profile.html',
                 controller: 'BaseCtrl'
             }).
             when('/remind', {

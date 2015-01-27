@@ -56,9 +56,6 @@ angular.module('ICEOapp')
             signin: function (data, success, error) {
                 $http.post(baseUrl + '/auth', data).success(success).error(error)
             },
-            profile: function (success, error) {
-                $http.get(baseUrl + '/user').success(success).error(error)
-            },
             logout: function (success, error) {
                 $http.delete(baseUrl + '/auth').success(success).error(error)
                 changeUser({});

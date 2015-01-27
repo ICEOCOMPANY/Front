@@ -8,20 +8,20 @@
 angular.module('ICEOapp')
     .controller('BaseCtrl', ['$rootScope', '$scope', '$location', '$routeParams', '$localStorage', '$route', 'MainFactory', function ($rootScope, $scope, $location, $routeParams, $localStorage, $route, MainFactory) {
 
-        $scope.checkToken = false;
-        //First check if token exists and is not extinct
-        if ($scope.checkToken === false) {
-            if ($localStorage.token !== undefined && $localStorage.token !== null) {
-                console.log("Sprawdzam token");
-                MainFactory.checkToken(function () {
-                    console.log("Fuck yeah");
-                }, function () {
-                    delete $localStorage.token;
-                    $location.path("/");
-                    $scope.token = null;
-                });
-            }
-            $scope.checkToken = true;
+        //Check if token exists and is not extinct
+        if ($localStorage.token !== undefined && $localStorage.token !== null) {
+            MainFactory.checkToken(function (res) {
+                console.log(res);
+                $scope.profile = {
+                    id: res.id,
+                    email: res.email,
+                    registered: res.registered
+                }
+            }, function (res) {
+                delete $localStorage.token;
+                $location.path("/");
+                $scope.token = null;
+            });
         }
 
         //Function runs when user sign in on website
@@ -64,13 +64,6 @@ angular.module('ICEOapp')
             })
         };
 
-        $scope.profile = function () {
-            MainFactory.me(function (res) {
-                $scope.myDetails = res;
-            }, function () {
-                $rootScope.error = 'Failed to fetch details';
-            })
-        };
 
         $scope.logout = function () {
             MainFactory.logout(function () {
@@ -108,14 +101,4 @@ angular.module('ICEOapp')
         $scope.token = $localStorage.token;
 
     }])
-
-    .
-    controller('MeCtrl', ['$rootScope', '$scope', '$location', 'MainFactory', function ($rootScope, $scope, $location, MainFactory) {
-
-        MainFactory.profile(function (res) {
-            $scope.myDetails = res;
-        }, function () {
-            $rootScope.error = 'Failed to fetch details';
-        })
-
-    }]);
+;

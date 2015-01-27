@@ -1,12 +1,13 @@
-<div class="row" data-ng-controller="MeCtrl">
+<div class="row">
     <div class="col-lg-12">
         <div class="panel panel-primary">
             <div class="panel-heading">
                 <strong>Your Details</strong>
             </div>
             <div class="panel-body">
-                <p>{{myDetails.data.email}}</p>
-                <p>{{myDetails.data.password}}</p>
+                <p><strong>Twoje id:</strong> {{profile.id}}</p>
+                <p><strong>Twój email:</strong> {{profile.email}}</p>
+                <p><strong>Data rejestracji:</strong> {{profile.registered}}</p>
             </div>
         </div>
     </div>
