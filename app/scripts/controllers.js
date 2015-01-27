@@ -6,14 +6,9 @@
  * BaseController use for sing up/sin in/logout/remind password
  */
 angular.module('ICEOapp')
-    .controller('BaseCtrl', ['$rootScope', '$scope', '$location', '$routeParams', '$localStorage', '$route', 'MainFactory', function ($rootScope, $scope, $routeParams, $location, $localStorage, $route, MainFactory) {
-        
-        $scope.$on('$routeChangeSuccess', function() {
-            console.log($route.current.params)
-        });
+    .controller('BaseCtrl', ['$rootScope', '$scope', '$location', '$routeParams', '$localStorage', '$route', 'MainFactory', function ($rootScope, $scope, $location, $routeParams, $localStorage, $route, MainFactory) {
 
         $scope.checkToken = false;
-        console.log("Zaczynam plik");
         //First check if token exists and is not extinct
         if ($scope.checkToken === false) {
             if ($localStorage.token !== undefined && $localStorage.token !== null) {
@@ -29,7 +24,7 @@ angular.module('ICEOapp')
             $scope.checkToken = true;
         }
 
-        //Function runs when user sing in on website
+        //Function runs when user sign in on website
         $scope.signin = function () {
             var formData = {
                 email: $scope.email,
@@ -103,7 +98,7 @@ angular.module('ICEOapp')
                 new_password: $scope.new_password,
                 reset_new_password: $scope.reset_new_password
             }
-            MainFactory.reset(formData, $routeParams.param, function () {
+            MainFactory.reset(formData, $route.current.params.param, function () {
                 alert("Nowe hasło wyslano wygenerowane");
             }, function () {
                 alert("Wystąpił błąd przy generowaniu hasła!");
