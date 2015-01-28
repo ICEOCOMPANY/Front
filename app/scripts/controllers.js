@@ -62,14 +62,12 @@ angular.module('ICEOapp')
                 } else {
                     $localStorage.token = res.token;
                     $location.path("/");
-                    $route.reload();
-                    $scope.token = $localStorage.token;
                 }
             }, function () {
                 $rootScope.error = 'Failed to signin';
-            })
+            }); 
         };
-
+        
         $scope.signup = function () {
             var formData = {
                 email: $scope.email,
