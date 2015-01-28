@@ -68,6 +68,7 @@ angular.module('ICEOapp')
             }); 
         };
         
+        //User registration
         $scope.signup = function () {
             var formData = {
                 email: $scope.email,
@@ -99,6 +100,7 @@ angular.module('ICEOapp')
             $scope.token = null;
         };
 
+        //Remind password
         $scope.remind = function () {
             var formData = {
                 email: $scope.email
@@ -110,6 +112,7 @@ angular.module('ICEOapp')
             });
         };
 
+        //Reset password if key is valid
         $scope.reset = function () {
             var formData = {
                 new_password: $scope.new_password,
@@ -122,6 +125,7 @@ angular.module('ICEOapp')
             });
         };
 
+        //Set token to inform that user is authentificaed
         $scope.token = $localStorage.token;
 
     }]);
