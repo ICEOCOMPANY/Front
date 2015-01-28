@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * Service to handle basic functions
  */

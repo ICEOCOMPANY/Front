@@ -1,9 +1,8 @@
-'use strict';
-
 angular.module('ICEOapp', [
     'ngStorage',
     'ngRoute',
-    'angular-loading-bar'
+    'angular-loading-bar',
+    'angularFileUpload'
 ])
     .config(['$routeProvider', '$httpProvider', function ($routeProvider, $httpProvider) {
 
@@ -32,8 +31,8 @@ angular.module('ICEOapp', [
                 templateUrl: 'partials/reset.html',
                 controller: 'BaseCtrl'
             }).
-            when('/file', {
-                templateUrl: 'partials/file.html',
+            when('/upload', {
+                templateUrl: 'partials/upload.html',
                 controller: 'FileController'
             }).
             otherwise({

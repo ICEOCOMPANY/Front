@@ -45,6 +45,7 @@
                 <ul class="nav navbar-nav">
                     <li><a ng-href="#/">Home</a></li>
                     <li data-ng-show="token"><a ng-href="#/me">Profil</a></li>
+                    <li data-ng-show="token"><a ng-href="#/upload">Upload</a></li>
                     <li data-ng-hide="token"><a ng-href="#/signin">Logowanie</a></li>
                     <li data-ng-hide="token"><a ng-href="#/signup">Rejestracja</a></li>
                     <li data-ng-show="token"><a ng-click="logout()">Wyloguj</a></li>
@@ -60,6 +61,8 @@
 <script src="lib/js/bootstrap.min.js"></script>
 <script src="lib//js/angular.js"></script>
 <script src="lib/js/angular-route.min.js"></script>
+<script src="lib/js/angular-file-upload-shim.js"></script> <!-- for no html5 browsers support -->
+<script src="lib/js/angular-file-upload.js"></script>
 <script src="lib/js/ngStorage.js"></script>
 <script src="lib/js/loading-bar.js"></script>
 <script src="scripts/app.js"></script>
