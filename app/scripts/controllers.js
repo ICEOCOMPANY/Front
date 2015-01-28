@@ -1,9 +1,11 @@
 /* Controllers */
 
+var ICEOapp = angular.module('ICEOapp');
+
 /**
  * BaseController use for sing up/sin in/logout/remind password
  */
-angular.module('ICEOapp').controller('BaseCtrl', ['$rootScope', '$scope', '$location', '$routeParams', '$localStorage', '$route', 'MainFactory', function ($rootScope, $scope, $location, $routeParams, $localStorage, $route, MainFactory) {
+ICEOapp.controller('BaseCtrl', ['$rootScope', '$scope', '$location', '$routeParams', '$localStorage', '$route', 'MainFactory', function ($rootScope, $scope, $location, $routeParams, $localStorage, $route, MainFactory) {
 
     //Check if token exists and is not extinct
     if ($localStorage.token !== undefined && $localStorage.token !== null) {
@@ -21,7 +23,7 @@ angular.module('ICEOapp').controller('BaseCtrl', ['$rootScope', '$scope', '$loca
         });
     }
 
-    //check token and redirect if user want to access a area he cant't
+    //check token and redirect if user want to access a area he can't
     $scope.$on('$routeChangeSuccess', function (event, next, current) {
         if ($localStorage.token !== undefined && $localStorage.token !== null) {
 
@@ -58,11 +60,14 @@ angular.module('ICEOapp').controller('BaseCtrl', ['$rootScope', '$scope', '$loca
                 console.log(res)
             } else {
                 $localStorage.token = res.token;
-                $location.path("/");
+                $scope.token = res.token;
+                //$location.path("/");
+                console.log("w fabryce "+$scope.token)
             }
         }, function () {
             $rootScope.error = 'Failed to signin';
         });
+        console.log("Na końcu "+$localStorage.token)
     };
 
     //User registration
@@ -122,13 +127,15 @@ angular.module('ICEOapp').controller('BaseCtrl', ['$rootScope', '$scope', '$loca
         });
     };
 
-    //Set token to inform that user is authentificaed
+    //Set token to inform that user is authenticated
+    console.log($localStorage.token)
     $scope.token = $localStorage.token;
 
 }]);
 
-angular.module('ICEOapp').controller('FileController', ['$scope', '$upload', 'MainFactory', function ($scope, $upload, MainFactory) {
+ICEOapp.controller('FileController', ['$scope', '$upload', 'MainFactory', function ($scope, $upload, MainFactory) {
 
+    //upload via angular-file-upload module, you can use drag&drop for further information see: https://github.com/danialfarid/angular-file-upload#manual
     var url = "http://back.core.iceo.zone/files";
     $scope.$watch('files', function () {
         if ($scope.files !== undefined) {
@@ -145,5 +152,5 @@ angular.module('ICEOapp').controller('FileController', ['$scope', '$upload', 'Ma
             });
         }
     });
-    
+
 }]);
