@@ -6,6 +6,7 @@ angular.module('ICEOapp', [
 ])
     .config(['$routeProvider', '$httpProvider', function ($routeProvider, $httpProvider) {
 
+        //Router managing paths (input controller)
         $routeProvider.
             when('/', {
                 templateUrl: 'partials/home.html'
@@ -37,9 +38,10 @@ angular.module('ICEOapp', [
                 redirectTo: '/'
             });
 
-        $httpProvider.interceptors.push(['$q', '$location', '$localStorage', function ($q, $location, $localStorage) {
+        $httpProvider.interceptors.push(['$rootScope', '$q', '$location', '$localStorage', function ($rootScope, $q, $location, $localStorage) {
             return {
                 'request': function (config) {
+                    //Inject Authorization header to recognition user
                     config.headers = config.headers || {};
                     if ($localStorage.token) {
                         config.headers.Authorization = $localStorage.token;
@@ -47,7 +49,11 @@ angular.module('ICEOapp', [
                     return config;
                 },
                 'responseError': function (response) {
+                    //If request contains extinct token -> clean $localStorage, token, and redirect to sign in page with error message
                     if (response.status === 401 || response.status === 403) {
+                        delete $localStorage.token;
+                        $rootScope.token = null;
+                        $rootScope.error = "Twoja sesja wygasła! zaloguj się ponownie.";
                         $location.path('/signin');
                     }
                     return $q.reject(response);

@@ -3,32 +3,32 @@
 var ICEOapp = angular.module('ICEOapp');
 
 /**
- * BaseController use for sign up/sign in/logout/remind password
+ * BaseController use for manage menu
  */
 ICEOapp.controller('BaseCtrl', ['$rootScope', '$scope', '$location', '$localStorage', 'MainFactory', function ($rootScope, $scope, $location, $localStorage, MainFactory) {
 
     //Check if token exists and is not extinct
-    $rootScope.$watch('token', function () {
-        if ($localStorage.token !== undefined && $localStorage.token !== null) {
-            MainFactory.checkToken(function (res) {
-                console.log(res);
-                $rootScope.profile = {
-                    id: res.id,
-                    email: res.email,
-                    registered: res.registered
-                }
-            }, function (res) {
-                delete $localStorage.token;
-                $location.path("/");
-                $rootScope.token = null;
-            });
-        }
-    });
+    /*$rootScope.$watch('token', function ($newValue, $oldValue) {
+     if ($localStorage.token !== undefined && $localStorage.token !== null && $newValue !== null) {
+     console.log($localStorage.token)
+     MainFactory.checkToken(function (res) {
+     $rootScope.profile = {
+     id: res.id,
+     email: res.email,
+     registered: res.registered
+     }
+     }, function (res) {
+     delete $localStorage.token;
+     $location.path("/");
+     $rootScope.token = null;
+     });
+     }
+     }, true);*/
 
     //Check token and redirect if user want to access a area he can't
     $scope.$on('$routeChangeSuccess', function (event, next, current) {
         if ($localStorage.token !== undefined && $localStorage.token !== null) {
-
+            //paths allows for guests, logged users cannot see them
             var guestPaths = ["/signin", "/signup"];
 
             angular.forEach(guestPaths, function (value, key) {
@@ -38,10 +38,10 @@ ICEOapp.controller('BaseCtrl', ['$rootScope', '$scope', '$location', '$localStor
             });
 
         } else {
+            //paths reserved for logged users (secure area)
+            var securedPaths = ["/profile", "/loogut", "/upload"];
 
-            var loggedPaths = ["/profile", "/loogut"];
-
-            angular.forEach(loggedPaths, function (value, key) {
+            angular.forEach(securedPaths, function (value, key) {
                 if (value == next.originalPath) {
                     $location.path("/");
                 }
@@ -55,7 +55,7 @@ ICEOapp.controller('BaseCtrl', ['$rootScope', '$scope', '$location', '$localStor
             delete $localStorage.token;
             $location.path("/");
         }, function () {
-            alert("Nie udało się wylogować");
+            console.log("Nie udało się wylogować");
         });
         $rootScope.token = null;
     };
@@ -71,6 +71,8 @@ ICEOapp.controller('BaseCtrl', ['$rootScope', '$scope', '$location', '$localStor
 ICEOapp.controller('SignUpCtrl', ['$rootScope', '$scope', '$location', '$localStorage', 'MainFactory', function ($rootScope, $scope, $location, $localStorage, MainFactory) {
     //User registration
     $scope.signup = function () {
+        $scope.error = null;
+        $scope.success = null;
         if ($scope.password === $scope.password_repeat) {
             var formData = {
                 email: $scope.email,
@@ -79,10 +81,11 @@ ICEOapp.controller('SignUpCtrl', ['$rootScope', '$scope', '$location', '$localSt
 
             MainFactory.signup(formData, function (res) {
                 if (res.token == false) {
-                    alert(res)
+                    console.log(res)
                 } else {
-                    $localStorage.token = res.data.token;
-                    $location.path("/");
+                    $scope.success = "Rejestracja udana, sprawdź maila w celu aktywacji konta."
+                    /*$localStorage.token = res.token;
+                     $location.path("/");*/
                 }
             }, function () {
                 $scope.error = 'Wystąpił błąd przy rejestracji';
@@ -94,6 +97,9 @@ ICEOapp.controller('SignUpCtrl', ['$rootScope', '$scope', '$location', '$localSt
     };
 }]);
 
+/**
+ * ActivateCtrl redirect user straight to server to activate
+ */
 ICEOapp.controller('ActivateCtrl', ['$rootScope', '$scope', '$location', '$localStorage', '$route', 'MainFactory', function ($rootScope, $scope, $location, $localStorage, $routeProvider, MainFactory) {
 
     console.log($routeProvider.current.params.key);
@@ -101,7 +107,7 @@ ICEOapp.controller('ActivateCtrl', ['$rootScope', '$scope', '$location', '$local
         key: $routeProvider.current.params.key
     }
     MainFactory.activate(formData, function (res) {
-        console.log(res)
+        $scope.success = 'Poprawnie aktywowano konto';
     }, function () {
         $scope.error = 'Wystąpił błąd przy aktywacji';
     })
@@ -131,6 +137,21 @@ ICEOapp.controller('SignInCtrl', ['$rootScope', '$scope', '$location', '$localSt
             $scope.error = 'Błąd przy logowaniu, sprawdź login lub hasło';
         });
     };
+}]);
+
+/**
+ * ProfileCtrl - retrieve user data
+ */
+ICEOapp.controller('ProfileCtrl', ['$scope', 'MainFactory', function ($scope,MainFactory) {
+    MainFactory.profile(function (res) {
+        $scope.profile = {
+            id: res.id,
+            email: res.email,
+            registered: res.registered
+        }
+    }, function () {
+        $scope.error = 'Błąd przy pobieraniu danych';
+    });
 }]);
 
 /**

@@ -47,7 +47,7 @@ ICEOapp.factory('MainFactory', ['$http', '$localStorage', function ($http, $loca
         $http.defaults.headers.put["Content-Type"] = 'text/plain';
 
         return {
-            checkToken: function(success, error){
+            profile: function(success, error){
                 $http.get(baseUrl + '/auth').success(success).error(error)
             },
             signup: function (data, success, error) {
