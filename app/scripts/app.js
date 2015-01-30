@@ -8,32 +8,30 @@ angular.module('ICEOapp', [
 
         $routeProvider.
             when('/', {
-                templateUrl: 'partials/home.html',
-                controller: 'BaseCtrl'
+                templateUrl: 'partials/home.html'
             }).
             when('/signin', {
-                templateUrl: 'partials/signin.html',
-                controller: 'BaseCtrl'
+                templateUrl: 'partials/signin.html'
             }).
             when('/signup', {
-                templateUrl: 'partials/signup.html',
-                controller: 'BaseCtrl'
+                templateUrl: 'partials/signup.html'
             }).
             when('/me', {
-                templateUrl: 'partials/profile.html',
-                controller: 'BaseCtrl'
+                templateUrl: 'partials/profile.html'
             }).
             when('/remind', {
-                templateUrl: 'partials/remind.html',
-                controller: 'BaseCtrl'
+                templateUrl: 'partials/remind.html'
             }).
             when('/reset/:param', {
-                templateUrl: 'partials/reset.html',
-                controller: 'BaseCtrl'
+                templateUrl: 'partials/reset.html'
+            }).
+            when('/signup/:key?', {
+                templateUrl: 'partials/signup.html',
+                controller: "ActivateCtrl"
             }).
             when('/upload', {
                 templateUrl: 'partials/upload.html',
-                controller: 'FileController'
+                controller: 'FileCtrl'
             }).
             otherwise({
                 redirectTo: '/'

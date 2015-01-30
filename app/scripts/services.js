@@ -1,8 +1,10 @@
+
+var ICEOapp = angular.module('ICEOapp');
+
 /**
  * Service to handle basic functions
  */
-angular.module('ICEOapp')
-    .factory('MainFactory', ['$http', '$localStorage', function ($http, $localStorage) {
+ICEOapp.factory('MainFactory', ['$http', '$localStorage', function ($http, $localStorage) {
 
         //API domain url - here you should define a domain of your REST API!
         var baseUrl = "http://back.core.iceo.zone";
@@ -64,9 +66,26 @@ angular.module('ICEOapp')
             reset: function(data, key, success, error){
                 $http.put(baseUrl+"/users/reset-password/"+key, data).success(success).error(error)
             },
-            getFile: function(success, error){
-                $http.get(baseUrl+"/files/1").success(success).error(error)
+            activate: function(data, success, error){
+                $http.post(baseUrl+"/users/activation", data).success(success).error(error)
             }
         };
     }
     ]);
+
+ICEOapp.factory('TokenFactory', ['$http', '$localStorage', function ($http, $localStorage) {
+
+    var token;
+
+    return{
+        setToken: function(value){
+            token = value;
+            console.log("Ustawiam token na"+token)
+        },
+        getToken: function(){
+            console.log("Zwracam token na"+token)
+            return token;
+        }
+    }
+
+}]);

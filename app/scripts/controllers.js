@@ -3,27 +3,29 @@
 var ICEOapp = angular.module('ICEOapp');
 
 /**
- * BaseController use for sing up/sin in/logout/remind password
+ * BaseController use for sign up/sign in/logout/remind password
  */
-ICEOapp.controller('BaseCtrl', ['$rootScope', '$scope', '$location', '$routeParams', '$localStorage', '$route', 'MainFactory', function ($rootScope, $scope, $location, $routeParams, $localStorage, $route, MainFactory) {
+ICEOapp.controller('BaseCtrl', ['$rootScope', '$scope', '$location', '$localStorage', 'MainFactory', function ($rootScope, $scope, $location, $localStorage, MainFactory) {
 
     //Check if token exists and is not extinct
-    if ($localStorage.token !== undefined && $localStorage.token !== null) {
-        MainFactory.checkToken(function (res) {
-            console.log(res);
-            $scope.profile = {
-                id: res.id,
-                email: res.email,
-                registered: res.registered
-            }
-        }, function (res) {
-            delete $localStorage.token;
-            $location.path("/");
-            $scope.token = null;
-        });
-    }
+    $rootScope.$watch('token', function () {
+        if ($localStorage.token !== undefined && $localStorage.token !== null) {
+            MainFactory.checkToken(function (res) {
+                console.log(res);
+                $rootScope.profile = {
+                    id: res.id,
+                    email: res.email,
+                    registered: res.registered
+                }
+            }, function (res) {
+                delete $localStorage.token;
+                $location.path("/");
+                $rootScope.token = null;
+            });
+        }
+    });
 
-    //check token and redirect if user want to access a area he can't
+    //Check token and redirect if user want to access a area he can't
     $scope.$on('$routeChangeSuccess', function (event, next, current) {
         if ($localStorage.token !== undefined && $localStorage.token !== null) {
 
@@ -48,6 +50,68 @@ ICEOapp.controller('BaseCtrl', ['$rootScope', '$scope', '$location', '$routePara
         }
     });
 
+    $scope.logout = function () {
+        MainFactory.logout(function () {
+            delete $localStorage.token;
+            $location.path("/");
+        }, function () {
+            alert("Nie udało się wylogować");
+        });
+        $rootScope.token = null;
+    };
+
+    //Set token to inform that user is authenticated
+    $rootScope.token = $localStorage.token;
+
+}]);
+
+/**
+ * SignUpCtrl use for registration of new user
+ */
+ICEOapp.controller('SignUpCtrl', ['$rootScope', '$scope', '$location', '$localStorage', 'MainFactory', function ($rootScope, $scope, $location, $localStorage, MainFactory) {
+    //User registration
+    $scope.signup = function () {
+        if ($scope.password === $scope.password_repeat) {
+            var formData = {
+                email: $scope.email,
+                password: $scope.password
+            }
+
+            MainFactory.signup(formData, function (res) {
+                if (res.token == false) {
+                    alert(res)
+                } else {
+                    $localStorage.token = res.data.token;
+                    $location.path("/");
+                }
+            }, function () {
+                $scope.error = 'Wystąpił błąd przy rejestracji';
+            })
+        } else {
+            $scope.error = "Hasła muszą być takie same!";
+        }
+
+    };
+}]);
+
+ICEOapp.controller('ActivateCtrl', ['$rootScope', '$scope', '$location', '$localStorage', '$route', 'MainFactory', function ($rootScope, $scope, $location, $localStorage, $routeProvider, MainFactory) {
+
+    console.log($routeProvider.current.params.key);
+    var formData = {
+        key: $routeProvider.current.params.key
+    }
+    MainFactory.activate(formData, function (res) {
+        console.log(res)
+    }, function () {
+        $scope.error = 'Wystąpił błąd przy aktywacji';
+    })
+
+}]);
+
+/**
+ * SignInCtrl allows user to authentication
+ */
+ICEOapp.controller('SignInCtrl', ['$rootScope', '$scope', '$location', '$localStorage', 'MainFactory', function ($rootScope, $scope, $location, $localStorage, MainFactory) {
     //Function runs when user sign in on website
     $scope.signin = function () {
         var formData = {
@@ -60,49 +124,20 @@ ICEOapp.controller('BaseCtrl', ['$rootScope', '$scope', '$location', '$routePara
                 console.log(res)
             } else {
                 $localStorage.token = res.token;
-                $scope.token = res.token;
-                //$location.path("/");
-                console.log("w fabryce "+$scope.token)
-            }
-        }, function () {
-            $rootScope.error = 'Failed to signin';
-        });
-        console.log("Na końcu "+$localStorage.token)
-    };
-
-    //User registration
-    $scope.signup = function () {
-        var formData = {
-            email: $scope.email,
-            password: $scope.password,
-            password_repeat: $scope.password_repeat
-        }
-
-        MainFactory.signup(formData, function (res) {
-            if (res.token == false) {
-                alert(res)
-            } else {
-                $localStorage.token = res.data.token;
+                $rootScope.token = $localStorage.token;
                 $location.path("/");
             }
         }, function () {
-            $rootScope.error = 'Failed to signup';
-        })
-
-    };
-
-
-    $scope.logout = function () {
-        MainFactory.logout(function () {
-            delete $localStorage.token;
-            $location.path("/");
-        }, function () {
-            alert("Failed to logout!");
+            $scope.error = 'Błąd przy logowaniu, sprawdź login lub hasło';
         });
-        $scope.token = null;
     };
+}]);
 
-    //Remind password
+/**
+ * RemindCtrl use for remind user password
+ */
+ICEOapp.controller('RemindCtrl', ['$rootScope', '$scope', '$location', '$localStorage', 'MainFactory', function ($rootScope, $scope, $location, $localStorage, MainFactory) {
+//Remind password
     $scope.remind = function () {
         var formData = {
             email: $scope.email
@@ -110,11 +145,16 @@ ICEOapp.controller('BaseCtrl', ['$rootScope', '$scope', '$location', '$routePara
         MainFactory.remind(formData, function () {
             alert("Nowe hasło wyslano na e-mail");
         }, function () {
-            alert("Wystąpił błąd przy przypomnieniu hasła!");
+            $scope.error = "Wystąpił błąd przy przypomnieniu hasła!";
         });
     };
+}]);
 
-    //Reset password if key is valid
+/**
+ * ResetCtrl to reset user password
+ */
+ICEOapp.controller('ResetCtrl', ['$rootScope', '$scope', '$location', '$localStorage', 'MainFactory', function ($rootScope, $scope, $location, $localStorage, MainFactory) {
+//Reset password if key is valid
     $scope.reset = function () {
         var formData = {
             new_password: $scope.new_password,
@@ -126,16 +166,17 @@ ICEOapp.controller('BaseCtrl', ['$rootScope', '$scope', '$location', '$routePara
             alert("Wystąpił błąd przy generowaniu hasła!");
         });
     };
-
-    //Set token to inform that user is authenticated
-    console.log($localStorage.token)
-    $scope.token = $localStorage.token;
-
 }]);
 
-ICEOapp.controller('FileController', ['$scope', '$upload', 'MainFactory', function ($scope, $upload, MainFactory) {
+/**
+ * FileController to upload files
+ */
+ICEOapp.controller('FileCtrl', ['$rootScope', '$scope', '$upload', 'MainFactory', function ($rootScope, $scope, $upload, MainFactory) {
 
-    //upload via angular-file-upload module, you can use drag&drop for further information see: https://github.com/danialfarid/angular-file-upload#manual
+    console.log($rootScope.token);
+    //$rootScope.token = "asd";
+
+    //Upload via angular-file-upload module, you can use drag&drop for further information see: https://github.com/danialfarid/angular-file-upload#manual
     var url = "http://back.core.iceo.zone/files";
     $scope.$watch('files', function () {
         if ($scope.files !== undefined) {
