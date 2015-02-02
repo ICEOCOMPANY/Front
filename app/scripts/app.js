@@ -1,3 +1,5 @@
+/* Main App */
+
 angular.module('ICEOapp', [
     'ngStorage',
     'ngRoute',

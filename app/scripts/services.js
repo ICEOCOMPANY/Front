@@ -1,3 +1,4 @@
+/* Services and Factories */
 
 var ICEOapp = angular.module('ICEOapp');
 
@@ -61,10 +62,10 @@ ICEOapp.factory('MainFactory', ['$http', '$localStorage', function ($http, $loca
                 changeUser({});
             },
             remind: function(data, success, error){
-                $http.post(baseUrl+"/users/"+data.email+"/reset-password").success(success).error(error)
+                $http.post(baseUrl+"/users/password", data).success(success).error(error)
             },
-            reset: function(data, key, success, error){
-                $http.put(baseUrl+"/users/reset-password/"+key, data).success(success).error(error)
+            reset: function(data, success, error){
+                $http.put(baseUrl+"/users/password", data).success(success).error(error)
             },
             activate: function(data, success, error){
                 $http.post(baseUrl+"/users/activation", data).success(success).error(error)

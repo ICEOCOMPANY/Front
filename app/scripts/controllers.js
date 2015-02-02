@@ -7,24 +7,6 @@ var ICEOapp = angular.module('ICEOapp');
  */
 ICEOapp.controller('BaseCtrl', ['$rootScope', '$scope', '$location', '$localStorage', 'MainFactory', function ($rootScope, $scope, $location, $localStorage, MainFactory) {
 
-    //Check if token exists and is not extinct
-    /*$rootScope.$watch('token', function ($newValue, $oldValue) {
-     if ($localStorage.token !== undefined && $localStorage.token !== null && $newValue !== null) {
-     console.log($localStorage.token)
-     MainFactory.checkToken(function (res) {
-     $rootScope.profile = {
-     id: res.id,
-     email: res.email,
-     registered: res.registered
-     }
-     }, function (res) {
-     delete $localStorage.token;
-     $location.path("/");
-     $rootScope.token = null;
-     });
-     }
-     }, true);*/
-
     //Check token and redirect if user want to access a area he can't
     $scope.$on('$routeChangeSuccess', function (event, next, current) {
         if ($localStorage.token !== undefined && $localStorage.token !== null) {
@@ -69,6 +51,7 @@ ICEOapp.controller('BaseCtrl', ['$rootScope', '$scope', '$location', '$localStor
  * SignUpCtrl use for registration of new user
  */
 ICEOapp.controller('SignUpCtrl', ['$rootScope', '$scope', '$location', '$localStorage', 'MainFactory', function ($rootScope, $scope, $location, $localStorage, MainFactory) {
+
     //User registration
     $scope.signup = function () {
         $scope.error = null;
@@ -84,8 +67,6 @@ ICEOapp.controller('SignUpCtrl', ['$rootScope', '$scope', '$location', '$localSt
                     console.log(res)
                 } else {
                     $scope.success = "Rejestracja udana, sprawdź maila w celu aktywacji konta."
-                    /*$localStorage.token = res.token;
-                     $location.path("/");*/
                 }
             }, function () {
                 $scope.error = 'Wystąpił błąd przy rejestracji';
@@ -95,6 +76,7 @@ ICEOapp.controller('SignUpCtrl', ['$rootScope', '$scope', '$location', '$localSt
         }
 
     };
+
 }]);
 
 /**
@@ -118,6 +100,7 @@ ICEOapp.controller('ActivateCtrl', ['$rootScope', '$scope', '$location', '$local
  * SignInCtrl allows user to authentication
  */
 ICEOapp.controller('SignInCtrl', ['$rootScope', '$scope', '$location', '$localStorage', 'MainFactory', function ($rootScope, $scope, $location, $localStorage, MainFactory) {
+
     //Function runs when user sign in on website
     $scope.signin = function () {
         var formData = {
@@ -137,13 +120,16 @@ ICEOapp.controller('SignInCtrl', ['$rootScope', '$scope', '$location', '$localSt
             $scope.error = 'Błąd przy logowaniu, sprawdź login lub hasło';
         });
     };
+
 }]);
 
 /**
  * ProfileCtrl - retrieve user data
  */
 ICEOapp.controller('ProfileCtrl', ['$scope', 'MainFactory', function ($scope,MainFactory) {
+
     MainFactory.profile(function (res) {
+        //save user data to profile object
         $scope.profile = {
             id: res.id,
             email: res.email,
@@ -152,13 +138,15 @@ ICEOapp.controller('ProfileCtrl', ['$scope', 'MainFactory', function ($scope,Mai
     }, function () {
         $scope.error = 'Błąd przy pobieraniu danych';
     });
+
 }]);
 
 /**
  * RemindCtrl use for remind user password
  */
 ICEOapp.controller('RemindCtrl', ['$rootScope', '$scope', '$location', '$localStorage', 'MainFactory', function ($rootScope, $scope, $location, $localStorage, MainFactory) {
-//Remind password
+
+    //Remind password
     $scope.remind = function () {
         var formData = {
             email: $scope.email
@@ -169,33 +157,34 @@ ICEOapp.controller('RemindCtrl', ['$rootScope', '$scope', '$location', '$localSt
             $scope.error = "Wystąpił błąd przy przypomnieniu hasła!";
         });
     };
+
 }]);
 
 /**
  * ResetCtrl to reset user password
  */
-ICEOapp.controller('ResetCtrl', ['$rootScope', '$scope', '$location', '$localStorage', 'MainFactory', function ($rootScope, $scope, $location, $localStorage, MainFactory) {
-//Reset password if key is valid
+ICEOapp.controller('ResetCtrl', ['$rootScope', '$scope', '$route', 'MainFactory', function ($rootScope, $scope, $route, MainFactory) {
+
+    //Reset password if key is valid
     $scope.reset = function () {
         var formData = {
             new_password: $scope.new_password,
-            reset_new_password: $scope.reset_new_password
+            repeat_new_password: $scope.repeat_new_password,
+            key:  $route.current.params.param
         }
-        MainFactory.reset(formData, $route.current.params.param, function () {
-            alert("Nowe hasło wyslano wygenerowane");
+        MainFactory.reset(formData, function () {
+            alert("Nowe hasło zostało wygenerowane");
         }, function () {
             alert("Wystąpił błąd przy generowaniu hasła!");
         });
     };
+
 }]);
 
 /**
  * FileController to upload files
  */
 ICEOapp.controller('FileCtrl', ['$rootScope', '$scope', '$upload', 'MainFactory', function ($rootScope, $scope, $upload, MainFactory) {
-
-    console.log($rootScope.token);
-    //$rootScope.token = "asd";
 
     //Upload via angular-file-upload module, you can use drag&drop for further information see: https://github.com/danialfarid/angular-file-upload#manual
     var url = "http://back.core.iceo.zone/files";
